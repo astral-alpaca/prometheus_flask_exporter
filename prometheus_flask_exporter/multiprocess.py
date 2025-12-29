@@ -118,7 +118,7 @@ class MultiprocessInternalPrometheusMetrics(MultiprocessPrometheusMetrics):
         return False
 
     @classmethod
-    def start_http_server_when_ready(cls, port, host='0.0.0.0'):
+    def start_http_server_when_ready(cls, port, host='0.0.0.0', **kwargs):
         import warnings
         warnings.warn(
             'The `MultiprocessInternalPrometheusMetrics` class is expected to expose the metrics endpoint '
@@ -163,7 +163,7 @@ class GunicornPrometheusMetrics(MultiprocessPrometheusMetrics):
         return True
 
     @classmethod
-    def start_http_server_when_ready(cls, port, host='0.0.0.0'):
+    def start_http_server_when_ready(cls, port, host='0.0.0.0', **kwargs):
         """
         Start the HTTP server from the Gunicorn config module.
         Doesn't necessarily need an instance, a class is fine.
@@ -175,11 +175,12 @@ class GunicornPrometheusMetrics(MultiprocessPrometheusMetrics):
 
         :param port: the HTTP port to expose the metrics endpoint on
         :param host: the HTTP host to listen on (default: `0.0.0.0`)
+        :param kwargs: additional kwargs to pass to the GunicornPrometheusMetrics constructor
         """
 
         _check_multiproc_env_var()
 
-        GunicornPrometheusMetrics().start_http_server(port, host)
+        GunicornPrometheusMetrics(**kwargs).start_http_server(port, host)
 
     @classmethod
     def mark_process_dead_on_child_exit(cls, pid):
